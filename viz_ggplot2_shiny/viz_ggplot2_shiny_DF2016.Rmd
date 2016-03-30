@@ -3,6 +3,7 @@ title: "DataFest 2016 <br/> Data visualization with R, ggplot2, and Shiny"
 author: "Mine Çetinkaya-Rundel"
 date: "March 28, 2016"
 output: ioslides_presentation
+runtime: shiny
 ---
 
 ```{r, echo=FALSE, results='hide'}
@@ -35,7 +36,7 @@ Download this file onto your computer. The codebook can also be found here.
 ## Load data
 
 ```{r}
-movies <- read.csv("data/movies.csv")
+movies <- read.csv("data/movies.csv", stringsAsFactors = FALSE)
 ```
 
 # ggplot2
@@ -69,7 +70,8 @@ ggplot(data = movies, aes(x = critics_score, y = audience_score, color = title_t
 ## With base R {.smaller}
 
 ```{r eval = FALSE}
-plot(y = movies$audience_score, x = movies$critics_score, col = movies$title_type)
+plot(y = movies$audience_score, x = movies$critics_score, 
+     col = factor(movies$title_type))
 
 doc <- movies[movies$title_type == "Documentary", ]
 ff <- movies[movies$title_type == "Feature Film", ]
@@ -83,14 +85,16 @@ abline(m_doc, col = 1)
 abline(m_ff, col = 2)
 abline(m_tv, col = 3)
 
-legend("topleft", levels(movies$title_type), col = c(1,2,3), lty = 1)
+legend("topleft", levels(factor(movies$title_type)), 
+       col = c(1,2,3), lty = 1)
 ```
 
 
 ## With base R {.smaller}
 
 ```{r fig.height = 4, echo = FALSE}
-plot(y = movies$audience_score, x = movies$critics_score, col = movies$title_type)
+plot(y = movies$audience_score, x = movies$critics_score, 
+     col = factor(movies$title_type))
 
 doc <- movies[movies$title_type == "Documentary", ]
 ff <- movies[movies$title_type == "Feature Film", ]
@@ -104,7 +108,8 @@ abline(m_doc, col = 1)
 abline(m_ff, col = 2)
 abline(m_tv, col = 3)
 
-legend("topleft", levels(movies$title_type), col = c(1,2,3), lty = 1)
+legend("topleft", levels(factor(movies$title_type)), 
+       col = c(1,2,3), lty = 1)
 ```
 
 # Grammar of Graphics
@@ -373,7 +378,94 @@ Shiny apps have two components:
 runExample("01_hello")
 ```
 
+## Various control widgets
+
+<center>
+http://shiny.rstudio.com/tutorial/lesson3/
+</center>
+
 ## Live demo
 
+```{r echo = FALSE}
+# Load data
+
+# Define UI for application that draws a histogram
+ui <- shinyUI(fluidPage(
+  
+  # Application title
+  titlePanel("Exploring Movies"),
+  
+  # Sidebar with a slider input for number of bins 
+  sidebarLayout(
+    sidebarPanel(
+      # Select variable for y-axis
+      selectInput("y",
+                  "Y-axis:",
+                  choices = c("imdb_rating", "imdb_num_votes",
+                              "critics_score", "audience_score",
+                              "runtime"),
+                  selected = "audience_score"
+      ),
+      
+      # Select variable for x-axis
+      selectInput("x",
+                  "X-axis:",
+                  choices = c("imdb_rating", "imdb_num_votes",
+                              "critics_score", "audience_score",
+                              "runtime"),
+                  selected = "critics_score"
+      ),
+      
+      # Select variable for color
+      selectInput("z",
+                  "Color by:",
+                  choices = c("title_type", "genre", "mpaa_rating",
+                              "critics_rating", "audience_rating")
+      ),
+      
+      # Alpha
+      sliderInput("alpha", 
+                  "Alpha:", 
+                  min = 0, max = 1, 
+                  value = 0.5),
+      
+      # Horizontal line separating population and sample input
+      hr(),
+      
+      # Sample size
+      numericInput("n",
+                   "Sample size:",
+                   min = 1,
+                   max = nrow(movies),
+                   value = nrow(movies))
+      
+    ),
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+      plotOutput("exp_plot")
+    )
+  )
+))
+
+# Define server logic required to draw a histogram
+server <- shinyServer(function(input, output) {
+  
+  # create data frame for sample means to be stored
+  movies_sample <- reactive({
+    movies %>%
+      sample_n(input$n)
+  })
+  
+  output$exp_plot <- renderPlot({
+    ggplot(data = movies_sample(), aes_string(x = input$x, y = input$y, 
+                                              color = input$z)) +
+      geom_point(alpha = input$alpha)
+  })
+})
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
 
 
