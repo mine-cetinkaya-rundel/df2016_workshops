@@ -1,7 +1,7 @@
 ## Data
 
 The data set is comprised of 651 randomly sampled movies produced and 
-released before 2016. Data come from [IMDB](http://www.imdb.com/) and [Rotten Tomatoes](http://www.rottentomatoes.com/.
+released before 2016. Data come from [IMDB](http://www.imdb.com/) and [Rotten Tomatoes](http://www.rottentomatoes.com/).
 
 ## Codebook
 
