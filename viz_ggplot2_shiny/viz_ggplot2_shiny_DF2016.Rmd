@@ -25,10 +25,6 @@ suppressMessages(library(shiny))
 
 Download this file onto your computer. The codebook can also be found here.
 
-- The slides can be viewed at
-
-    - http://bit.ly/df2016_viz_slides
-
 - All source files can be found at
 
     - http://bit.ly/df2016_viz
