@@ -387,8 +387,6 @@ http://shiny.rstudio.com/tutorial/lesson3/
 ## Live demo
 
 ```{r echo = FALSE}
-# Load data
-
 # Define UI for application that draws a histogram
 ui <- shinyUI(fluidPage(
   
@@ -468,4 +466,15 @@ server <- shinyServer(function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
+# Acknowledgments
+
+## Acknowledgments
+
+Above materials are derived in part from the following sources:
+
+* [RStudio Data Visualization Cheat Sheet](http://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf)
+
+* [RStudio Shiny Cheat Sheet](http://www.rstudio.com/wp-content/uploads/2016/01/shiny-cheatsheet.pdf)
+
+* Package Documentation - [ggplot2](http://docs.ggplot2.org/current/), [shiny](http://shiny.rstudio.com/)
 
