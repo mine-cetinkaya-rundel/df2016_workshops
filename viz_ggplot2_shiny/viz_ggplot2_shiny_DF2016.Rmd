@@ -1,10 +1,8 @@
 ---
-title: "DataFest 2016 <br/> Data visualization with R, ggplot2, and shiny"
+title: "DataFest 2016 <br/> Data visualization with R, ggplot2, and Shiny"
 author: "Mine Çetinkaya-Rundel"
 date: "March 28, 2016"
-output:
-    ioslides_presentation:
-        widescreen: true
+output: ioslides_presentation
 ---
 
 ```{r, echo=FALSE, results='hide'}
@@ -12,6 +10,7 @@ options(width = 90)
 
 suppressMessages(library(dplyr))
 suppressMessages(library(ggplot2))
+suppressMessages(library(shiny))
 ```
 
 
@@ -342,4 +341,39 @@ ggplot(data = movies, aes(x = imdb_num_votes, y = imdb_rating, color = audience_
       color = "Audience rating") +
   theme_bw()
 ```
+
+# Shiny
+
+## Shiny
+
+- A web application framework for R with which you can easily turn your analyses into interactive web applications
+
+- No HTML, CSS, or JavaScript knowledge required
+
+## Set up
+
+```{r eval=FALSE}
+install.packages("shiny")
+library(shiny)
+```
+
+- The Shiny package has built-in examples that each demonstrate how Shiny works. Each example is a self-contained Shiny app.
+
+## Structure of a Shiny App
+
+Shiny apps have two components:
+
+- a user-interface script: controls the layout and appearance of your app
+
+- a server script: contains the instructions that your computer needs to build your app
+
+## Give it a try
+
+```{r eval=FALSE}
+runExample("01_hello")
+```
+
+## Live demo
+
+
 
