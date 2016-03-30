@@ -5,7 +5,6 @@ date: "March 28, 2016"
 output:
     ioslides_presentation:
         widescreen: true
-        smaller: false
 ---
 
 ```{r, echo=FALSE, results='hide'}
@@ -28,8 +27,319 @@ Download this file onto your computer. The codebook can also be found here.
 
 - The slides can be viewed at
 
-    - http://bit.ly/df2016_viz
+    - http://bit.ly/df2016_viz_slides
 
 - All source files can be found at
 
     - http://bit.ly/df2016_viz
+
+## Load data
+
+```{r}
+movies <- read.csv("data/movies.csv")
+```
+
+# ggplot2
+
+## ggplot2
+
+- ggplot2 is a plotting system for R, based on the grammar of graphics, which tries to take the good parts of base and lattice graphics and none of the bad parts. 
+
+- It takes care of many of the fiddly details that make plotting a hassle (like drawing legends) as well as providing a powerful model of graphics that makes it easy to produce complex multi-layered graphics.
+
+<br>
+
+Source: http://ggplot2.org/
+
+## Why ggplot2?
+
+- **Statistical:** Visualize $Y \sim X | Z$ with ease
+
+- **Technical:** Human readable syntax
+
+- **Bonus:** Aesthetically pleasing
+
+## With ggplot2 {.smaller}
+
+```{r fig.height = 4}
+ggplot(data = movies, aes(x = critics_score, y = audience_score, color = title_type)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+## With base R {.smaller}
+
+```{r eval = FALSE}
+plot(y = movies$audience_score, x = movies$critics_score, col = movies$title_type)
+
+doc <- movies[movies$title_type == "Documentary", ]
+ff <- movies[movies$title_type == "Feature Film", ]
+tv <- movies[movies$title_type == "TV Movie", ]
+
+m_doc <- lm(audience_score ~ critics_score, data = doc)
+m_ff <-  lm(audience_score ~ critics_score, data = ff)
+m_tv <-  lm(audience_score ~ critics_score, data = tv)
+
+abline(m_doc, col = 1)
+abline(m_ff, col = 2)
+abline(m_tv, col = 3)
+
+legend("topleft", levels(movies$title_type), col = c(1,2,3), lty = 1)
+```
+
+
+## With base R {.smaller}
+
+```{r fig.height = 4, echo = FALSE}
+plot(y = movies$audience_score, x = movies$critics_score, col = movies$title_type)
+
+doc <- movies[movies$title_type == "Documentary", ]
+ff <- movies[movies$title_type == "Feature Film", ]
+tv <- movies[movies$title_type == "TV Movie", ]
+
+m_doc <- lm(audience_score ~ critics_score, data = doc)
+m_ff <-  lm(audience_score ~ critics_score, data = ff)
+m_tv <-  lm(audience_score ~ critics_score, data = tv)
+
+abline(m_doc, col = 1)
+abline(m_ff, col = 2)
+abline(m_tv, col = 3)
+
+legend("topleft", levels(movies$title_type), col = c(1,2,3), lty = 1)
+```
+
+# Grammar of Graphics
+
+## The Grammar of Graphics
+
+- Visualisation concept created by Wilkinson (1999)
+    - to define the basic elements of a statistical graphic 
+
+- Adapted for R by Wickham (2009) who created the `ggplot2` package
+    - consistent and compact syntax to describe statistical graphics
+    - highly modular as it breaks up graphs into semantic components 
+
+- Is not a guide which graph to choose and how to convey information best!
+
+<br>
+
+Source: https://rpubs.com/timwinke/ggplot2workshop
+
+## The Grammar of Graphics - Terminology
+
+A statistical graphic is a...
+
+- mapping of **data**
+- to **aesthetic attributes** (color, size, xy-position)
+- using **geometric objects** (points, lines, bars)
+- with data being **statistically transformed** (summarised, log-transformed)
+- and mapped onto a specific **facet** and **coordinate system**
+
+## Audience score vs. critics score {.smaller}
+
+```{r echo=FALSE, fig.height=3, fig.width=5, warning=FALSE}
+ggplot(data = movies, aes(x = audience_score, y = critics_score)) +
+  geom_point()
+```
+
+- Which data is used as an input?
+- What geometric objects are chosen for visualization?
+- What variables are mapped onto which attributes?
+- What type of scales are used to map data to aesthetics?
+- Are the variables statistically transformed before plotting?
+
+## Audience score vs. critics score - code {.smaller}
+
+```{r fig.height=3, fig.width=5}
+ggplot(data = movies, aes(x = audience_score, y = critics_score)) +
+  geom_point()
+```
+
+## Altering features {.smaller}
+
+```{r echo=FALSE, fig.height=3, fig.width=5, warning=FALSE}
+ggplot(data = movies, aes(x = audience_score, y = critics_score)) +
+  geom_point(alpha = 0.5, color = "blue")
+```
+
+- How did the plot change?
+- Are these changes based on data (i.e. can be mapped to variables in the dataset) or
+changes in preferences for geometric objects?
+
+## Altering features - code
+
+```{r fig.height=3, fig.width=5}
+ggplot(data = movies, aes(x = audience_score, y = critics_score)) +
+  geom_point(alpha = 0.5, color = "blue")
+```
+
+## Faceting {.smaller}
+
+```{r echo=FALSE, fig.height=3, fig.width=8, warning=FALSE}
+ggplot(data = movies, aes(x = audience_score, y = critics_score, color = genre)) +
+  geom_point(alpha = 0.5) +
+  facet_grid(. ~ title_type)
+```
+
+- How did the plot change?
+- Are these changes based on data (i.e. can be mapped to variables in the dataset) or
+changes in preferences for geometric objects?
+
+## Faceting - code {.smaller}
+
+```{r fig.height=3, fig.width=8, warning=FALSE}
+ggplot(data = movies, aes(x = audience_score, y = critics_score, color = genre)) +
+  geom_point(alpha = 0.5) +
+  facet_grid(. ~ title_type)
+```
+
+## More faceting {.smaller}
+
+```{r fig.height=4, fig.width=8, warning=FALSE}
+ggplot(data = movies, aes(x = audience_score, y = critics_score, color = genre)) +
+  geom_point(alpha = 0.5) +
+  facet_grid(audience_rating ~ title_type)
+```
+
+## Anatomy of ggplots
+
+```
+ggplot(data = [dataframe], aes(x = [var_x], y = [var_y], 
+       color = [var_for_color], fill = [var_for_fill], 
+       shape = [var_for_shape])) +
+    geom_[some_geom] +
+    ... # other options
+```
+
+# Various plots
+
+## Histograms
+
+```{r fig.height=3, fig.width=7, warning=FALSE}
+ggplot(data = movies, aes(x = audience_score)) +
+  geom_histogram(binwidth = 5)
+```
+
+## Boxplots
+
+```{r fig.height=3, fig.width=8, warning=FALSE}
+ggplot(data = movies, aes(y = audience_score, x = genre)) +
+  geom_boxplot()
+```
+
+## Boxplots - axis formatting
+
+```{r fig.height=3, fig.width=8, warning=FALSE}
+ggplot(data = movies, aes(y = audience_score, x = genre)) +
+  geom_boxplot() +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1))
+```
+
+## Density plots - border color
+
+```{r fig.height=3, fig.width=8, warning=FALSE}
+ggplot(data = movies, aes(x = runtime, color = audience_rating)) +
+  geom_density() 
+```
+
+## Density plots - fill color
+
+```{r fig.height=3, fig.width=8, warning=FALSE}
+ggplot(data = movies, aes(x = runtime, fill = audience_rating)) +
+  geom_density() 
+```
+
+## Density plots - fill color, with alpha
+
+```{r fig.height=3, fig.width=8, warning=FALSE}
+ggplot(data = movies, aes(x = runtime, fill = audience_rating)) +
+  geom_density(alpha = 0.5) 
+```
+
+## Scatter plots
+
+```{r fig.height=3, fig.width=8, warning=FALSE}
+ggplot(data = movies, aes(x = imdb_rating, y = audience_score)) +
+  geom_point(alpha = 0.5) 
+```
+
+## Smoothing
+
+```{r fig.height=3, fig.width=8, warning=FALSE}
+ggplot(data = movies, aes(x = imdb_rating, y = audience_score)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth()
+```
+
+## Smoothing - lm
+
+```{r fig.height=3, fig.width=8, warning=FALSE}
+ggplot(data = movies, aes(x = imdb_rating, y = audience_score)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm")
+```
+
+## Barplots
+
+```{r fig.height=3, fig.width=8, warning=FALSE}
+ggplot(data = movies, aes(x = genre)) +
+  geom_bar() +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1))
+```
+
+## Segmented barplots
+
+```{r fig.height=3, fig.width=9, warning=FALSE}
+ggplot(data = movies, aes(x = genre, fill = audience_rating)) +
+  geom_bar() +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1))
+```
+
+## Segmented barplots - proportions
+
+```{r fig.height=3, fig.width=9, warning=FALSE}
+ggplot(data = movies, aes(x = genre, fill = audience_rating)) +
+  geom_bar(position = "fill") +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1))
+```
+
+## Dodged barplots
+
+```{r fig.height=3, fig.width=9, warning=FALSE}
+ggplot(data = movies, aes(x = genre, fill = audience_rating)) +
+  geom_bar(position = "dodge") +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1))
+```
+
+## Not on team `theme_grey()`?
+
+```{r fig.height=3, fig.width=9, warning=FALSE}
+ggplot(data = movies, aes(x = genre, fill = audience_rating)) +
+  geom_bar(position = "dodge") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## More `ggplot2` resources
+
+- Visit http://docs.ggplot2.org/current/ for documentation on the current version
+of the `ggplot2` package. It's full of examples!
+
+- Refer to the `ggplot2` cheatsheet: http://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf
+
+- Themes vignette: http://docs.ggplot2.org/dev/vignettes/themes.html
+
+## Exercise 
+
+Recereate the following plot. Hint: Add a `labs()` layer.
+
+```{r echo=FALSE, fig.height=4}
+ggplot(data = movies, aes(x = imdb_num_votes, y = imdb_rating, color = audience_rating)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~ mpaa_rating) +
+  labs(x = "IMDB number of votes", y = "IMDB rating", 
+      title = "IMDB and RT scores, by MPAA rating",
+      color = "Audience rating") +
+  theme_bw()
+```
+
