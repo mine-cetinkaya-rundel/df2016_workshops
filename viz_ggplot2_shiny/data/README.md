@@ -1,3 +1,10 @@
+## Data
+
+The data set is comprised of 651 randomly sampled movies produced and 
+released before 2016. Data come from [IMDB](http://www.imdb.com/) and [Rotten Tomatoes](http://www.rottentomatoes.com/.
+
+## Codebook
+
 1. `title`: Title of movie
 1. `title_type`: Type of movie (Documentary, Feature Film, TV Movie)
 1. `genre`: Genre of movie (Action & Adventure, Comedy, Documentary, Drama, 1. Horror, Mystery & Suspense, Other)
