@@ -14,7 +14,7 @@ library(dplyr)
 # Load data
 movies <- read.csv("../data/movies.csv", stringsAsFactors = FALSE)
 
-# Define UI for application that draws a histogram
+# Define UI for application that draws a ggplot
 ui <- shinyUI(fluidPage(
   
   # Application title
@@ -76,7 +76,7 @@ ui <- shinyUI(fluidPage(
 # Define server logic required to draw a histogram
 server <- shinyServer(function(input, output) {
   
-  # create data frame for sample means to be stored
+  # Create a new data frame that is a sample of n observations from movies
   movies_sample <- reactive({
     movies %>%
       sample_n(input$n)
@@ -91,4 +91,3 @@ server <- shinyServer(function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-

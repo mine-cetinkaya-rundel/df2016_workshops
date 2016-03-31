@@ -1,7 +1,7 @@
 ---
 title: "DataFest 2016 <br/> Data visualization with R, ggplot2, and Shiny"
 author: "Mine Çetinkaya-Rundel"
-date: "March 28, 2016"
+date: "March 30, 2016"
 output: ioslides_presentation
 runtime: shiny
 ---
@@ -334,12 +334,15 @@ of the `ggplot2` package. It's full of examples!
 Recereate the following plot. Hint: Add a `labs()` layer.
 
 ```{r echo=FALSE, fig.height=4}
-ggplot(data = movies, aes(x = imdb_num_votes, y = imdb_rating, color = audience_rating)) +
+ggplot(data = movies, aes(x = imdb_num_votes, 
+                          y = imdb_rating, 
+                          color = audience_rating)) +
   geom_point(alpha = 0.5) +
   facet_wrap(~ mpaa_rating) +
-  labs(x = "IMDB number of votes", y = "IMDB rating", 
-      title = "IMDB and RT scores, by MPAA rating",
-      color = "Audience rating") +
+  labs(x = "IMDB number of votes", 
+       y = "IMDB rating", 
+       title = "IMDB and RT scores, by MPAA rating",
+       color = "Audience rating") +
   theme_bw()
 ```
 
@@ -383,7 +386,7 @@ http://shiny.rstudio.com/tutorial/lesson3/
 ## Live demo
 
 ```{r echo = FALSE}
-# Define UI for application that draws a histogram
+# Define UI for application that draws a ggplot
 ui <- shinyUI(fluidPage(
   
   # Application title
@@ -445,7 +448,7 @@ ui <- shinyUI(fluidPage(
 # Define server logic required to draw a histogram
 server <- shinyServer(function(input, output) {
   
-  # create data frame for sample means to be stored
+  # Create a new data frame that is a sample of n observations from movies
   movies_sample <- reactive({
     movies %>%
       sample_n(input$n)
